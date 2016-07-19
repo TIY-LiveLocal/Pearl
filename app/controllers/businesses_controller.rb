@@ -1,8 +1,9 @@
 class BusinessesController < ApplicationController
- def index
-    @businesses = Business.all
+  def index
+    @businesses = yelp(approved_params)
+
     respond_to do |format|
-      format.json { render json: businesses_mockup }
+      format.json { render json: @businesses.to_json }
       format.html { redirect_to '/404' }
     end
   end
@@ -66,7 +67,14 @@ class BusinessesController < ApplicationController
     location = ops[:location] ||= 'Durham'
     term = ops[:term] ||= 'food'
 
-    Yelp.client.search(city,term)
+    Yelp.client.search(location, item: term)
+  end
+
+  def approved_params
+    params[:zip_code] ||= current_user.zip_code
+    params.permit(
+     :zip_code
+    )
   end
 
   def business_mockup
@@ -91,5 +99,9 @@ class BusinessesController < ApplicationController
      # "survey" => [],
      # "profile" => []
     }]
+  end
+
+  def zip_code
+    27701
   end
 end
