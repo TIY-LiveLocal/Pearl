@@ -10,6 +10,7 @@ module YelpGemWrapper
   def self.find_business ops={}
     location    = ops[:location]
     term        = ops[:term]
+    limit       = ops[:limit]
     Yelp.client.search(location, {limit: 1, term: term}).businesses.first
   end
 

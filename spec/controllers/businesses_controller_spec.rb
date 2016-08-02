@@ -8,8 +8,7 @@ RSpec.describe BusinessesController, type: :controller do
 
   def response_as_expected? response
     r = JSON.parse response.body
-    (r.is_a? Array) &&
-      (r.count == 20)
+    r.is_a? Array
   end
 
   it "allows users to search near their zip code" do

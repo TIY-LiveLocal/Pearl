@@ -11,10 +11,10 @@ end
 class YelpGemWrapperWorker
   include Sidekiq::Worker
 
-  def perform(location, term)
+  def perform(location, term, limit=1)
     Rails.logger.debug("it's yelp gem wrapper worker.")
     raw_results = YelpGemWrapper.for({location: location,
-       limit: 20,
+       limit: limit,
        term: term
       })
     YelpStrategy.run(raw_results)
