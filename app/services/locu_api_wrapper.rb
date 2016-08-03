@@ -1,5 +1,7 @@
 class LocuAPIWrapper
 
+  include WhatKindOfLocuLocation
+
   attr_reader :results
 
   def initialize raw_results
@@ -29,6 +31,12 @@ class LocuAPIWrapper
     yr2 = YelpGemWrapper.process_result(yr)
 
   end
+
+  def location
+    is_zipcode
+
+
+    private
 
 
 end
