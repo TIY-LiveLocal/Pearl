@@ -12,55 +12,43 @@ class LocuAPI
   def initialize ops={}
     @key                = ENV['locu_api_key']
     @location           = ops[:location].strip
+    @location_hash      = {}
     @description        = ops[:description]
     @headers = { 'Content-Type' => 'application/json' }
     @raw_results = []
   end
 
-  def each &block
+ def each &block
     @raw_results["venues"].each do |r|
       block.call r
     end
   end
 
   def self.search ops={}
-    new_search = self.new(ops)
+    new_search = self.new( ops )
     new_search.set_locational_attributes
-    # body        = {
-    #   "api_key": o.key,
-    #   "fields": ["name", "location", "categories"],
-    #   "venue_queries": [{
-    #     "location": {
-    #       @location_type=>@location
-    #     }
-    #   }]
-    # }
-    # binding.pry
-    # o.raw_results = HTTParty.post(
-    #   LOCU_API_URL,
-    #   headers: o.headers,
-    #   body: body.to_json
-    # )
-    # return o
+    new_search.perform
+    new_search.prepare
   end
 
   def perform
     body        = {
-      "api_key": o.key,
+      "api_key": @key,
       "fields": ["name", "location", "categories"],
       "venue_queries": [{
-        "location": {
-          @location_type=>@location
-        }
+        "location": @location_hash
       }]
     }
     @raw_results = HTTParty.post(
       LOCU_API_URL,
-      headers: o.headers,
+      headers: @headers,
       body: body.to_json
     )
   end
 
+  def prepare
+    @raw_results = @raw_results["venues"]
+  end
 
   def set_locational_attributes
     with_zip_code?      && return
@@ -70,26 +58,34 @@ class LocuAPI
   private
 
   def with_zip_code?
-    return false if
-      ( @location.gsub(/\d|-/,"").length > 0 )
-    @location_type = "postal_code"
-    return true
+    postal_string = ""
+    matched = /(\d\d\d\d\d)([-]\d+)*/.match @location
+    return unless matched
+    postal_string += matched[1] if matched[1]
+    postal_string += matched[2] if matched[2]
+
+    if postal_string.length > 0
+      @location_hash.merge! (
+        {"postal_code": postal_string}
+      )
+    end
   end
 
   def with_city_state?
     matched = /([-A-Za-z ]+)\s*,\s*([A-Za-z]{2})($|\s)+/.match @location
-
+    return unless matched
     if matched[1]
-      @location_hash = {"region": matched[2]}
-    else
-      return false
+      @location_hash.merge! (
+        {"region": matched[2]}
+      )
     end
 
     if matched[2]
       @location_hash.merge! (
-    @city, @state = /([-A-Za-z ]+)\s*,\s*([A-Za-z]{2})($|\s)+/.match l
+        {"locality": matched[1]}
+      )
+    end
   end
-
 
   # def self.circular_area_search ops={}
   #   o           = self.new(ops)
@@ -107,6 +103,5 @@ class LocuAPI
   #     }]
   #   }
   # end
-
 
 end
