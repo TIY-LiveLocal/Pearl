@@ -8,7 +8,7 @@ class GooglePlacesAPI
 
   attr_reader :key, :query, :next_page_token, :raw_results, :response
 
-  def self.search ops={}
+  def self.text_search ops={}
     self.new ops
   end
 

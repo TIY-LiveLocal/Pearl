@@ -8,11 +8,10 @@ RSpec.describe BusinessesController, type: :controller do
 
   def response_as_expected? response
     r = JSON.parse response.body
-    (r.is_a? Array) &&
-      (r.count == 20)
+    r.is_a? Array
   end
 
-  xit "allows users to search near their zip code" do
+  it "allows users to search near their zip code" do
 
     u = create :user, zip_code: "27701"
     sign_in u
@@ -42,7 +41,7 @@ RSpec.describe BusinessesController, type: :controller do
   end
 
 
-  it "allows businesses to find themselves using location and a term" do
+  xit "allows businesses to find themselves using location and a term" do
     u = user
     sign_in u
     yelp_id = "dames-chicken-and-waffles-durham"
@@ -55,6 +54,7 @@ RSpec.describe BusinessesController, type: :controller do
     expect(response).to have_http_status(:ok)
 
     r = JSON.parse response.body
+    binding.pry
     expect(r.first["yelp_id"]).to eq(yelp_id)
 
     expect(r.is_a? Array).

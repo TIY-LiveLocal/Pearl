@@ -1,4 +1,4 @@
-class YelpStrategy
+class YelpOtherStrategy
 
   attr_reader :response
 
