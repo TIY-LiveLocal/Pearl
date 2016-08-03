@@ -1,7 +1,7 @@
 class SurveysController < ApplicationController
 
   def matches
-    @matches = get_matches
+    @matches = get_matches.uniq
     render json: @matches.to_json
   end
 

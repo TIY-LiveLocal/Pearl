@@ -28,7 +28,7 @@ RSpec.describe SurveysController, type: :controller do
 
       sign_in user
 
-      survey = create :survey, responder: user
+      survey = create :user_survey, responder: user
 
       get :show 
 
@@ -43,7 +43,7 @@ RSpec.describe SurveysController, type: :controller do
 
       sign_in user
 
-      user_survey = create :survey, responder: user
+      user_survey = create :user_survey, responder: user
       user_survey.save!
 
       b1 = create :business
@@ -55,12 +55,12 @@ RSpec.describe SurveysController, type: :controller do
       b3 = create :business
       b3.save!
 
-      b1_survey = create :survey, responder: b1
+      b1_survey = create :business_survey, responder: b1
       b1_survey.save!
-      b2_survey = create :survey, responder: b2
+      b2_survey = create :business_survey, responder: b2
       b2_survey.save!
 
-      b3_survey = create :survey, responder: b3
+      b3_survey = create :business_survey, responder: b3
       b3_survey.save!
 
       get :matches
