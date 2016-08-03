@@ -24,7 +24,7 @@ class SurveysController < ApplicationController
   end
 
   def business_surveys
-    Survey.where(responder_type: "Business")
+    Survey.where(responder_type: "Business", zip_code: current_user.zip_code)
   end
 
   def get_matches
