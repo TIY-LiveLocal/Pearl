@@ -1,7 +1,7 @@
 class SurveysController < ApplicationController
 
   def matches
-    @matches = get_matches
+    @matches = get_matches.uniq
     render json: @matches.to_json
   end
 
@@ -24,7 +24,7 @@ class SurveysController < ApplicationController
   end
 
   def business_surveys
-    Survey.where(responder_type: "Business", zip_code: current_user.zip_code)
+    Survey.where(responder_type: "Business")
   end
 
   def get_matches
