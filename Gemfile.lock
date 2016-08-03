@@ -214,6 +214,8 @@ GEM
       railties (>= 4.2.0, < 5.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    rollbar (2.11.5)
+      multi_json
     rspec-core (3.5.1)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -331,6 +333,7 @@ DEPENDENCIES
   pundit
   rack-cors
   rails (>= 5.0.0, < 5.1)
+  rollbar
   rspec-rails
   sass-rails (~> 5.0)
   simplecov
