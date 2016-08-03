@@ -20,9 +20,8 @@ class NearbyBusinesses
     )
 
     @results = Business.
-               where(zip_code: ops[:zip_code]) #.
-               # for kaminari #
-    #page(ops[:page])
+               where(zip_code: ops[:zip_code]).
+               page(ops[:page])
 
 
 
