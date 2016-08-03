@@ -24,7 +24,6 @@ class GooglePlacesAPIWrapperWorker
   end
 
   def process_result r
-    binding.pry
     sleep( rand(0..64)/1024.0 )
     YelpGemWrapperWorker.perform_async(
       location: r["formatted_address"],
