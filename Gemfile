@@ -26,6 +26,8 @@ gem 'mailgun-ruby', require: 'mailgun'
 gem 'factory_girl_rails'
 gem 'faker'
 gem 'sidekiq'
+gem 'kaminari'
+gem 'rollbar'
 
 group :development, :test do
 gem 'better_errors'

@@ -1,16 +1,48 @@
 class BusinessesController < ApplicationController
 
   def yelp
-    if @business = Business.find_by(id: params[:id])
-      YelpGemWrapper.
-      find_business({  location: @business.address,
-                       term: @business.name})
+    if params[:term]
+      @businesses = NearbyBusinesses.for(
+        {zip_code:  current_user.zip_code,
+         term:      params[:term],
+         page:      params[:page]
+        }
+      )
+      render json: @businesses.to_json
+    else
+      render json: {message: "Please provide both a location, and search term."}, status: 400
     end
-    @business.to_json
   end
 
+  # def yelp
+  #   @results = YelpGemWrapper.
+  #     find_business({  location: current_user.zip_code,
+  #                      term: @business.name})
+  #   end
+  #   @results.to_json
+  # end
+
+  # def yelp
+  #   if params[:term]
+  #     @businesses = NearbyBusinesses.for(
+  #       {zip_code:  current_user.zip_code,
+  #        term:      params[:term],
+  #        page:      params[:page]
+  #       }
+  #     )
+  #     render json: @businesses.to_json
+  #   else
+  #         render json: {message: "Please provide both a location, and search term."}, status: 400
+  #   end
+  # end
+
+
+
   def index
-    @businesses = NearbyBusinesses.for({zip_code: current_user.zip_code})
+    @businesses = NearbyBusinesses.for(
+     {zip_code: current_user.zip_code,
+      page:     params[:page]}
+    )
     @businesses = LocalScore.prepare(@businesses)
     render json: @businesses.to_json
   end
@@ -59,8 +91,13 @@ class BusinessesController < ApplicationController
   end
 
   def find_business
-    if (params[:location].length > 0) && (params[:term].length > 0)
-      @businesses = NearbyBusinesses.for({zip_code: params[:location],term: params[:term]})
+    if params[:term]
+      @businesses = NearbyBusinesses.for(
+        {zip_code:  params[:location],
+         term:      params[:term],
+         page:      params[:page]
+        }
+      )
       render json: @businesses.to_json
     else
       render json: {message: "Please provide both a location, and search term."}, status: 400

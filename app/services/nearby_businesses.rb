@@ -1,6 +1,6 @@
 class NearbyBusinesses
-
   def self.for(ops={})
+
     # yelp is good, yelp is fast
 
     # give sidekiq positional arguments
@@ -23,7 +23,6 @@ class NearbyBusinesses
                where(zip_code: ops[:zip_code]).
                page(ops[:page])
 
-
-
+    return @results
   end
 end

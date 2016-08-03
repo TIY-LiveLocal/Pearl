@@ -30,34 +30,17 @@ class SurveysController < ApplicationController
   def get_matches
     match = [] 
     business_surveys.each do |biz_survey|
-      match.push(biz_survey.responder.attributes.merge(biz_survey.attributes))
+      Survey.column_names.each do |attr|
+        if (biz_survey.send(attr) == true) && (user_survey.send(attr) == true)
+          match.push(biz_survey.responder.attributes.merge(biz_survey.attributes))
+        end
+      end
     end
     match
-
-    # [
-    #   {"id"=> "242",
-    #    "name"=> "Beer Durham",
-    #    "address"=> "404 Hunt St Ste 110",
-    #    "phone"=> "9196800770",
-    #    "survey" =>
-    #                  ["veganPeta", "petFriend", "artsCrafts", "veganPeta", "petFriend", "artsCrafts", "veganPeta"]},
-    #   {"id"=> "243",
-    #    "name"=> "Wine Authorities - Wine Shop",
-    #    "address"=> "2501 University Dr",
-    #    "phone"=> "9194892884",
-    #    "survey" =>
-    #                  ["charNonprof", "veganPeta", "petFriend", "artsCrafts", "veganPeta", "petFriend", "artsCrafts", "charNonprof", "veganPeta"]},
-    #   {"id"=> "244",
-    #    "name"=> "Brandy Wine Cellars ",
-    #    "address"=> "7011 Fayetteville Rd",
-    #    "phone"=> "9195446358",
-    #           "survey" =>
-    #                  ["charNonprof", "petFriend", "artsCrafts", "veganPeta", "petFriend", "artsCrafts", "charNonprof", "veganPeta"]}
-    # ]
   end
 
   def user_survey_mockup
-      ["hiring", "musicians", "glutFree"]
+    ["hiring", "musicians", "glutFree"]
   end
 
   def not_found
@@ -80,6 +63,5 @@ class SurveysController < ApplicationController
       sustain: params[:sustain],
       veganPeta: params[:veganPeta]
     }
-
   end
 end
