@@ -6,10 +6,11 @@ class ApiController < ApplicationController
     if @user.valid_password?(params[:password])
       @token = @user.generate_token_for "Angular Frontend"
       render json: {
-               token: @token.nonce,
-               message: "Sign in successful.",
-               sign_in_count: @user.sign_in_count,
-               first_name: @user.first_name
+               token:           @token.nonce,
+               message:         "Sign in successful.",
+               sign_in_count:   @user.sign_in_count,
+               first_name:      @user.first_name,
+               zip_code:        @user.zip_code
              }
     else
       render status: 400, json: {message: "error"}
