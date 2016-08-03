@@ -1,7 +1,6 @@
 require 'sidekiq'
-require 'yelp_strategy'
-require 'google_strategy'
-require 'locu_strategy'
+require 'locu_api_wrapper_worker'
+require 'google_places_api_wrapper_worker'
 
 Sidekiq.configure_client do |config|
   config.redis = { db: 1 }
@@ -19,11 +18,20 @@ class BusinessFinderWorker
     @results =      []
   end
 
-  def perform(strategy: YelpBusinessFinder, ops: {})
+  def perform(location, term)
+    LocuAPIWrapperWorker.perform_async(
+      location,
+      term
+    )
+    GooglePlacesAPIWrapperWorker.perform_async(
+      location,
+      term
+    )
+  end
     #Rails.logger.debug("hey you!")
     #Rails.logger.debug(ops)
-    Rails.logger.debug(ops)
-    strategies = ops["strategies"]
+#    Rails.logger.debug(ops)
+#    strategies = ops["strategies"]
 
 
 #    ['YelpStrategy'].each do |strategy|
@@ -52,7 +60,7 @@ class BusinessFinderWorker
     #end
 #    @results.compact!        # TODO: place this closer to the source
 #    return @results
-  end
+#  end
 
 #  def page_results
 #    binding.pry

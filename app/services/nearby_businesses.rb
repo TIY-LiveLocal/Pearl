@@ -3,16 +3,28 @@ class NearbyBusinesses
   def self.for(ops={})
     # yelp is good, yelp is fast
 
+    # give sidekiq positional arguments
+
+    location    = ops[:zip_code],
+    term        = ops[:term] ||='food'
+
     YelpStrategy.run(YelpGemWrapper.for(
                       location: ops[:zip_code],
                       term:     ops[:term]  ||= 'food',
-                      limit:    ops[:limit] ||= 20
+                      limit:    limit ||= 20
                     ))
+
+    BusinessFinderWorker.perform_async(
+      location,
+      term
+    )
 
     @results = Business.
                where(zip_code: ops[:zip_code]) #.
                # for kaminari #
-               #page(ops[:page])
+    #page(ops[:page])
+
+
 
   end
 end

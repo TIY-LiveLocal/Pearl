@@ -12,8 +12,6 @@ class GooglePlacesAPIWrapperWorker
   include Sidekiq::Worker
 
   def perform(location, term, limit=1)
-    binding.pry
-
     raw_results = GooglePlacesAPI.text_search({
        location: location,
        term: term
@@ -24,7 +22,7 @@ class GooglePlacesAPIWrapperWorker
   end
 
   def process_result r
-    sleep( rand(0..64)/1024.0 + 5)
+    sleep( rand(0..64)/1024.0 + 1)
     Rails.logger.debug(self.jid + r["formatted_address"].to_s + " " + r["name"].to_s)
     YelpGemWrapperWorker.perform_async(
       r["formatted_address"],

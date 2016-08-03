@@ -18,13 +18,12 @@ class LocuAPIWrapperWorker
     })
 
     raw_results.each do |r|
-      binding.pry
       process_result r
     end
   end
 
   def process_result r
-    sleep( rand(0..64)/1024.0 + 5)
+    sleep( rand(0..64)/1024.0 + 1)
     location = r["location"]["locality"] + ", " + r["location"]["region"]
     Rails.logger.debug(self.jid + location.to_s + " " + r["name"].to_s)
     YelpGemWrapperWorker.perform_async(
