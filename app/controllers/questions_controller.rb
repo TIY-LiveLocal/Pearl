@@ -34,7 +34,11 @@ class QuestionsController < ApplicationController
         all_answers = []
         q.answers.each do |a|
           answer = a.attributes
-          answer["author"] = "#{a.answerer.username}"
+          if a.answerer_type == "User"
+            answer["author"] = "#{a.answerer.username}"
+          else
+            answer["author"] = "#{a.answerer.name}"
+          end
           all_answers.push(answer)
         end
         question = q.attributes
