@@ -5,7 +5,10 @@ class NearbyBusinesses
 
     # give sidekiq positional arguments
 
-    location    = ops[:zip_code],
+    location    = ops[:zip_code]
+    if ops[:location]
+      location = ops[:location]
+    end
     term        = ops[:term] ||='food'
 
     YelpStrategy.run(YelpGemWrapper.for(

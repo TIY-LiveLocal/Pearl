@@ -10,6 +10,13 @@ class YelpStrategy
     self.create_businesses!
   end
 
+  def self.as_query raw_results
+    @duplicates_count = 0
+    @response = YelpResponse.new(raw_results)
+    @response.process!
+    @response.results
+  end
+
   def self.create_businesses!
     @response.results.each do |result|
       b = Business.new(result)

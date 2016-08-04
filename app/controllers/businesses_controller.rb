@@ -2,7 +2,7 @@ class BusinessesController < ApplicationController
 
   def yelp
     if params[:term]
-      @businesses = NearbyBusinesses.for(
+      @businesses = YelpSearch.for(
         {zip_code:  current_user.zip_code,
          term:      params[:term],
          page:      params[:page]
@@ -10,33 +10,9 @@ class BusinessesController < ApplicationController
       )
       render json: @businesses.to_json
     else
-      render json: {message: "Please provide both a location, and search term."}, status: 400
+      render json: {message: "Please provide a search term."}, status: 400
     end
   end
-
-  # def yelp
-  #   @results = YelpGemWrapper.
-  #     find_business({  location: current_user.zip_code,
-  #                      term: @business.name})
-  #   end
-  #   @results.to_json
-  # end
-
-  # def yelp
-  #   if params[:term]
-  #     @businesses = NearbyBusinesses.for(
-  #       {zip_code:  current_user.zip_code,
-  #        term:      params[:term],
-  #        page:      params[:page]
-  #       }
-  #     )
-  #     render json: @businesses.to_json
-  #   else
-  #         render json: {message: "Please provide both a location, and search term."}, status: 400
-  #   end
-  # end
-
-
 
   def index
     @businesses = NearbyBusinesses.for(
@@ -91,11 +67,10 @@ class BusinessesController < ApplicationController
   end
 
   def find_business
-    if params[:term]
-      @businesses = NearbyBusinesses.for(
-        {zip_code:  params[:location],
-         term:      params[:term],
-         page:      params[:page]
+    if params[:term] && params[:location]
+      @businesses = YelpSearch.for(
+        {location:  params[:location],
+         term:      params[:term]
         }
       )
       render json: @businesses.to_json
