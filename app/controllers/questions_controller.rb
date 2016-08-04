@@ -22,7 +22,7 @@ class QuestionsController < ApplicationController
   end
 
   def questions
-    Question.where(business_id: params["business_id"])
+    Question.where(business_id: params["id"])
   end
 
   def get_all_questions_with_answers
